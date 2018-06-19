@@ -1,7 +1,12 @@
+from datetime import date
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
+
+FESTIVAL_START = date(2018, 5, 8)
+FESTIVAL_END = date(2018, 5, 19)
 
 db = SQLAlchemy()
 login_manager = LoginManager()

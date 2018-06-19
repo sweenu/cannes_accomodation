@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Make a reservation</h1>
+  <form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+      {{ form.vips.label }}<br>
+      {{ form.vips() }}<br>
+      {% for error in form.vips.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.date_arrival.label }}<br>
+      {{ form.date_arrival() }}<br>
+      {% for error in form.date_arrival.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.date_departure.label }}<br>
+      {{ form.date_departure() }}<br>
+      {% for error in form.date_departure.errors %}
+      <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+  </form>
+{% endblock %}

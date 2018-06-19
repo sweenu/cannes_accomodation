@@ -1,10 +1,10 @@
 from functools import wraps
 
-from flask import Blueprint, render_template, abort, redirect, url_for, flash
+from flask import Blueprint, render_template, abort, redirect, url_for, flash, session
 from flask_login import current_user, logout_user, login_user, login_required
 
-from .forms import LoginForm
-from .models import User, Accomodation
+from .forms import LoginForm, ReservationForm
+from .models import User, Accomodation, Reservation, VIP
 
 bp = Blueprint('main', __name__)
 
@@ -74,4 +74,16 @@ def accomodation(name):
 @login_required
 @staff_required
 def reservation():
-    pass
+    form = ReservationForm()
+    vips = VIP.query.order_by('last_name')
+    form.vips.choices = [(vip.id, f'{vip.last_name} {vip.first_name}') for vip in vips]
+    if form.validate_on_submit():
+        vips = []
+        for vip_id in form.vips.data:
+            vips.append(VIP.query.filter_by(id=vip_id))
+
+        session['reservation'] = Reservation(date_arrival=form.date_arrival.data,
+                                             date_departure=form.date_departure.data,
+                                             vip=vips)
+        return render_template('choose_accomodation.html', accomodations=accomodations)
+    return render_template('reservation.html', form=form)
