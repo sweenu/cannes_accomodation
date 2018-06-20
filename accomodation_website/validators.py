@@ -12,18 +12,18 @@ class TimeCondition:
     def date_from_field(datefield, form):
         """Set self.date to a `datetime.date` object if it currently is a `DateField`"""
         try:
-            datefield = form[datefield].data
+            date = form[datefield].data
         except KeyError:
-            raise ValidationError(f'Invalid field name {date}')
+            raise ValidationError(f'Invalid field name {datefield}')
 
-        if not isinstance(datefield, datetime.date):
-            raise ValidationError(f'Not a DateField')
+        if not isinstance(date, datetime.date):
+            raise TypeError('Not a DateField')
 
-        return datefield
+        return date
 
     def check_date(self, form):
         if not isinstance(self.date, datetime.date):
-            date_from_field(self.date, form)
+            self.date = self.date_from_field(self.date, form)
 
 
 class Before(TimeCondition):
@@ -35,7 +35,7 @@ class Before(TimeCondition):
 
     def __call__(self, form, field):
         self.check_date(form)
-        if field.data < self.date:
+        if field.data > self.date:
             raise ValidationError(self.message)
 
 
@@ -48,5 +48,5 @@ class After(TimeCondition):
 
     def __call__(self, form, field):
         self.check_date(form)
-        if field.data > self.date:
+        if field.data < self.date:
             raise ValidationError(self.message)

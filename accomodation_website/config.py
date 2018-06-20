@@ -1,4 +1,4 @@
-from secrets import SECRET_KEY, DB_URI
+SECRET_KEY = 'dev'
 
 # Flask-SQLAlchemy settings
 SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'

@@ -24,7 +24,7 @@ class Accomodation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
     total_rooms = db.Column(db.Integer)
-    available_rooms = db.relationship('AvailableRooms')
+    available_rooms = db.relationship('AvailableRooms', backref='accomodations')
     type = db.Column(db.String(64))
 
     services = db.relationship('Service', secondary='accomodation_service',
@@ -82,8 +82,10 @@ class VIP(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String)
     last_name = db.Column(db.String)
-    
 
+class Guests(VIP):
+    pass
+    
 class Juror(VIP):
     pass
 

@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, abort, redirect, url_for, flash, s
 from flask_login import current_user, logout_user, login_user, login_required
 
 from .forms import LoginForm, ReservationForm
-from .models import User, Accomodation, Reservation, VIP
+from .models import User, Accomodation, Reservation, VIP, AvailableRooms
 
 bp = Blueprint('main', __name__)
 
@@ -48,7 +48,7 @@ def home():
     elif len(accomodations) > 1:
         return render_template('accomodation_list.html', accomodations=accomodations)
     else:
-        pass
+        return redirect(url_for('main.reservation'))
 
 
 @bp.route('/accomodations')
@@ -70,7 +70,7 @@ def accomodation(name):
     return render_template('accomodation.html', accomodation=accomodation)
 
 
-@bp.route('/reservation')
+@bp.route('/reservation', methods=['GET', 'POST'])
 @login_required
 @staff_required
 def reservation():
@@ -81,9 +81,15 @@ def reservation():
         vips = []
         for vip_id in form.vips.data:
             vips.append(VIP.query.filter_by(id=vip_id))
+        nb_vips = len(vips)
+        avail_rooms = AvailableRooms.query \
+                .filter(form.date_arrival <= AvailableRooms.date <= form.date_departure) \
+                .filter(AvailableRooms.number >= nb_vips) \
+                .all()
+        avail_acco = avail_rooms.accomodations
 
         session['reservation'] = Reservation(date_arrival=form.date_arrival.data,
                                              date_departure=form.date_departure.data,
                                              vip=vips)
-        return render_template('choose_accomodation.html', accomodations=accomodations)
+        return render_template('choose_accomodation.html', accomodations=avail_acco)
     return render_template('reservation.html', form=form)

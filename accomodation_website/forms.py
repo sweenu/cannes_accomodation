@@ -1,10 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import (
+    DateField,
     StringField,
     PasswordField,
     BooleanField,
     SubmitField,
-    DateField,
     SelectField,
     SelectMultipleField
 )
@@ -22,15 +22,18 @@ class LoginForm(FlaskForm):
 
 
 class ReservationForm(FlaskForm):
-    during_festival = [After(FESTIVAL_START,
-                             message=f'The festival starts the {FESTIVAL_START}'),
-                       Before(FESTIVAL_END,
-                              message=f'The festival end the {FESTIVAL_END}')]
-    vips = SelectMultipleField('VIPs', validators=[DataRequired()])
-    date_arrival = DateField('Day arrival', validators=during_festival)
-    departure_validator = [After(date_arrival,
+    start = FESTIVAL_START.strftime('%d/%m/%Y')
+    end = FESTIVAL_END.strftime('%d/%m/%Y')
+    during_festival = [After(FESTIVAL_START, message=f'The festival starts the {start}'),
+                       Before(FESTIVAL_END, message=f'The festival ends the {end}')]
+    departure_validator = [After('date_arrival',
                                  message='Departure date must be after arrival date')] \
                            + during_festival 
-    date_departure = DateField('Day departure',
+    datefield_defaults = {'format': '%d/%m/%Y'}
+
+    vips = SelectMultipleField('VIPs', coerce=int, validators=[DataRequired()])
+    date_arrival = DateField('Day arrival', **datefield_defaults,
+                             validators=during_festival)
+    date_departure = DateField('Day departure', **datefield_defaults,
                                validators=departure_validator)
     submit = SubmitField('Proceed')
