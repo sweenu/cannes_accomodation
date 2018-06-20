@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1 class='title'>Available accomodations</h1>
+  <form action="" method="post">
+    {{ form.hidden_tag() }}
+
+    <div class='field'>
+      <div class='label'>{{ form.accomodation.label }}</div>
+      <div class='control'>
+        {{ form.accomodation(class='select') }}
+      </div>
+      {% for error in form.accomodation.errors %}
+      <p class='help is-danger'>{{ error }}</p>
+      {% endfor %}
+    </div>
+
+    <div class='field'>
+      <div class='label'>{{ form.date_arrival.label }}</div>
+      <div class='control'>
+        {{ form.date_arrival(class='input', placeholder='8/5/2018') }}
+      </div>
+      {% for error in form.date_arrival.errors %}
+      <p class='help is-danger'>{{ error }}</p>
+      {% endfor %}
+    </div>
+
+    <div class='field'>
+      <div class='label'>{{ form.date_departure.label }}</div>
+      <div class='control'>
+        {{ form.date_departure(class='input', placeholder='19/5/2018') }}
+      </div>
+      {% for error in form.date_departure.errors %}
+      <p class='help is-danger'>{{ error }}</p>
+      {% endfor %}
+
+    </div>
+    <div class='field'>
+      <div class='control'>
+        {{ form.submit(class='button is-link') }}
+      </div>
+    </div>
+  </form>
+{% endblock %}

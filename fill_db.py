@@ -5,21 +5,21 @@ from accomodation_website.models import *
 
 
 users = [
-        User(username='gerard', staff=True),
-        User(username='davdav', staff=True),
-        User(username='juju'),
-        User(username='matmat'),
-        User(username='plpl'),
+        User(username='gerard', staff=True, mail='gerard@cannes.com'),
+        User(username='davdav', staff=True, mail='davdav@cannes.com'),
+        User(username='juju', mail='juju@cannes.com'),
+        User(username='matmat', mail='matmat@cannes.com'),
+        User(username='plpl', mail='plpl@cannes.com'),
     ]
 for i, user in enumerate(users):
     user.set_password(f'password{i}')
 
 
 accomodations = [
-        Accomodation(name="Le palais de l'intensité", owner=users[1], total_rooms=104),
-        Accomodation(name="DFCO quartier général", owner=users[2], total_rooms=87),
-        Accomodation(name="Les milles et un kebabs", owner=users[3], total_rooms=5),
-        Accomodation(name="Shoufka", owner=users[4], total_rooms=28),
+        Accomodation(name="Le Palais de l'Intensité", owner=users[1], total_rooms=104),
+        Accomodation(name="Le Patio Des Artistes", owner=users[2], total_rooms=87),
+        Accomodation(name="Le Canberra", owner=users[3], total_rooms=5),
+        Accomodation(name="Five Seas", owner=users[4], total_rooms=28),
     ]
 for day in range(8, 19):
     date = datetime.date(2018, 5, day)

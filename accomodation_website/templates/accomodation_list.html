@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <ul>
+  <div class='tile is-ancestor'>
+    <div class='tile is-vertical is-8'>
     {% for accomodation in accomodations %}
-    <li><a href="/accomodations/{{ accomodation.name }}">{{ accomodation.name }}</a></li>
+      {% include 'accomodation_card.html' %}
     {% endfor %}
-  </ul>
+    </div>
+  </div>
 {% endblock %}
