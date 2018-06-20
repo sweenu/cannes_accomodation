@@ -36,11 +36,21 @@ class Accomodation(db.Model):
     def __repr__(self):
         return f'<Accomodation {self.name}>'
 
+    def is_available(self, start, end, number):
+        rooms = []
+        for room in self.available_rooms:
+            if start <= room.date <= end:
+                rooms.append(room)
+        if not (end - start).days == len(rooms):
+            return False
+        return all([room.number >= number for room in rooms])
+
 
 class AvailableRooms(db.Model):
     number = db.Column(db.Integer, nullable=False)
     date = db.Column(db.Date, primary_key=True, nullable=False)
-    accomodation_id = db.Column(db.Integer, db.ForeignKey('accomodation.id'))
+    accomodation_id = db.Column(db.Integer, db.ForeignKey('accomodation.id'),
+                                primary_key=True)
 
 
 class Service(db.Model):

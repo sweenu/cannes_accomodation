@@ -25,7 +25,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
+            flash('Invalid username or password', 'error')
             return redirect(url_for('main.login'))
         login_user(user, remember=form.remember.data)
         return redirect('/home')
@@ -63,11 +63,19 @@ def accomodations():
         abort(403)
 
 
-@bp.route('/accomodations/<name>')
+@bp.route('/accomodations/<name>', methods=['GET', 'POST'])
 @login_required
 def accomodation(name):
     accomodation = Accomodation.query.filter_by(name=name).first_or_404()
-    return render_template('accomodation.html', accomodation=accomodation)
+    form = AccomodationForm()
+    if form.validate_on_submit():
+        pass
+        flash('The changes have successfully been saved', 'success')
+    if accomodation in current_user.accomodations:
+        return render_template('update_accomodation.html', accomodation=accomodation,
+                               form=form)
+    else:
+        return render_template('accomodation.html', accomodation=accomodation)
 
 
 @bp.route('/reservation', methods=['GET', 'POST'])
@@ -82,14 +90,18 @@ def reservation():
         for vip_id in form.vips.data:
             vips.append(VIP.query.filter_by(id=vip_id))
         nb_vips = len(vips)
-        avail_rooms = AvailableRooms.query \
-                .filter(form.date_arrival <= AvailableRooms.date <= form.date_departure) \
-                .filter(AvailableRooms.number >= nb_vips) \
-                .all()
-        avail_acco = avail_rooms.accomodations
+        accomodations = Accomodation.query.all()
+        available_accomodations = [acco for acco in accomodations \
+                                    if acco.is_available(form.date_arrival.data,
+                                                         form.date_departure.data,
+                                                         nb_vips)]
+        if not available_accomodations:
+            flash('No more rooms are available', 'error')
+            return redirect(url_for('main.reservation'))
 
         session['reservation'] = Reservation(date_arrival=form.date_arrival.data,
                                              date_departure=form.date_departure.data,
                                              vip=vips)
-        return render_template('choose_accomodation.html', accomodations=avail_acco)
+        return render_template('choose_accomodation.html',
+                               accomodations=available_accomodations)
     return render_template('reservation.html', form=form)

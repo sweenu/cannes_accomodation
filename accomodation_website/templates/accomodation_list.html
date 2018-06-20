@@ -3,7 +3,7 @@
 {% block content %}
   <ul>
     {% for accomodation in accomodations %}
-    <li><a href=/accomodations/{{ accomodation.id }}>{{ accomodation.name }}</a></li>
+    <li><a href="/accomodations/{{ accomodation.name }}">{{ accomodation.name }}</a></li>
     {% endfor %}
   </ul>
 {% endblock %}

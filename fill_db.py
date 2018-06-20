@@ -1,3 +1,5 @@
+import datetime
+
 from accomodation_website import db, create_app
 from accomodation_website.models import *
 
@@ -12,12 +14,20 @@ users = [
 for i, user in enumerate(users):
     user.set_password(f'password{i}')
 
+
 accomodations = [
-        Accomodation(name="Le palais de l'intensité", owner=users[1]),
-        Accomodation(name="DFCO quartier général", owner=users[2]),
-        Accomodation(name="Les milles et un kebabs", owner=users[3]),
-        Accomodation(name="Shoufka", owner=users[4]),
+        Accomodation(name="Le palais de l'intensité", owner=users[1], total_rooms=104),
+        Accomodation(name="DFCO quartier général", owner=users[2], total_rooms=87),
+        Accomodation(name="Les milles et un kebabs", owner=users[3], total_rooms=5),
+        Accomodation(name="Shoufka", owner=users[4], total_rooms=28),
     ]
+for day in range(8, 19):
+    date = datetime.date(2018, 5, day)
+    for acco in accomodations:
+        acco.available_rooms.append(AvailableRooms(number=acco.total_rooms,
+                                                   date=date))
+                                                   # accomodation_id=acco.id))
+
 
 vips = [
         Juror(first_name='Lorem', last_name='Ipsum'),
@@ -33,10 +43,8 @@ vips = [
 
 
 app = create_app()
-
 with app.app_context():
     db.create_all()
     for obj in users + accomodations + vips:
         db.session.add(obj)
-
     db.session.commit()

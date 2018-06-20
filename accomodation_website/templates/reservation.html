@@ -1,30 +1,44 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Make a reservation</h1>
+  <h1 class='title'>Make a reservation</h1>
   <form action="" method="post">
     {{ form.hidden_tag() }}
-    <p>
-      {{ form.vips.label }}<br>
-      {{ form.vips() }}<br>
+
+    <div class='field'>
+      <div class='label'>{{ form.vips.label }}</div>
+      <div class='control'>
+        {{ form.vips(class='select is-multiple') }}
+      </div>
       {% for error in form.vips.errors %}
-      <span style="color: red;">[{{ error }}]</span>
+      <p class='help is-danger'>{{ error }}</p>
       {% endfor %}
-    </p>
-    <p>
-      {{ form.date_arrival.label }}<br>
-      {{ form.date_arrival() }}<br>
+    </div>
+
+    <div class='field'>
+      <div class='label'>{{ form.date_arrival.label }}</div>
+      <div class='control'>
+        {{ form.date_arrival(class='input', placeholder='8/5/2018') }}
+      </div>
       {% for error in form.date_arrival.errors %}
-      <span style="color: red;">[{{ error }}]</span>
+      <p class='help is-danger'>{{ error }}</p>
       {% endfor %}
-    </p>
-    <p>
-      {{ form.date_departure.label }}<br>
-      {{ form.date_departure() }}<br>
+    </div>
+
+    <div class='field'>
+      <div class='label'>{{ form.date_departure.label }}</div>
+      <div class='control'>
+        {{ form.date_departure(class='input', placeholder='19/5/2018') }}
+      </div>
       {% for error in form.date_departure.errors %}
-      <span style="color: red;">[{{ error }}]</span>
+      <p class='help is-danger'>{{ error }}</p>
       {% endfor %}
-    </p>
-    <p>{{ form.submit() }}</p>
+
+    </div>
+    <div class='field'>
+      <div class='control'>
+        {{ form.submit(class='button is-link') }}
+      </div>
+    </div>
   </form>
 {% endblock %}

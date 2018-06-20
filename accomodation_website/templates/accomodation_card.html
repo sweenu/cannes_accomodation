@@ -1,0 +1,14 @@
+<div class='tile'>
+  <p class='title'>{{ accomodation.name }}</p>
+    <p>Capacity: {{ accomodation.total_room if accomodation.total_room else 'N/A' }}</p>
+    <p>Type: {{ accomodation.type if accomodation.type else 'N/A' }}</p>
+    <p>Services:{{ ' N/A' if accomodation.services else '' }}</p>
+      {% if accomodation.services %}
+      <ul>
+      {% for service in accomodation.services %}
+        <li>{{ service }}</li>
+      {% endfor %}
+      </ul>
+      {% endif %}
+  </ul>
+</div>
